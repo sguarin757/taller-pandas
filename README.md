@@ -93,3 +93,97 @@ Para entregar, agrega al final de este `README.md` una sección con tu nombre y 
 3. ¿Los clientes VIP compran más que los Regulares?
 4. ¿Qué método de pago es el más usado?
 5. ¿Cuáles son los cinco clientes con más compras?
+
+---
+
+## Entrega
+
+**Estudiante:** Simón Guarín
+
+### Respuestas del desafío
+
+Los resultados salen de la opción 4 del menú (`python main.py`), después de ejecutar las opciones 1, 2 y 3.
+
+#### 1. ¿Qué categoría genera más ingresos?
+
+```
+categoria
+Tecnologia    14290000
+Hogar          3653000
+Papeleria       749000
+Accesorios      484000
+Name: total, dtype: int64
+```
+
+**Respuesta:** Tecnología es la categoría que más ingresos genera, con $14.290.000.
+**Criterio:** suma de la columna `total` por categoría, ordenada de mayor a menor.
+
+#### 2. ¿Qué canal vende más?
+
+```
+        ventas  ingresos
+canal                   
+Online      35  14669000
+Tienda      33   4507000
+```
+
+**Respuesta:** Online es el canal que más vende, con $14.669.000 en ingresos.
+**Criterio:** ingresos totales por canal. Online también gana en cantidad de ventas (35 contra 33), así que la respuesta es la misma con los dos criterios.
+
+#### 3. ¿Los clientes VIP compran más que los Regulares?
+
+```
+                  clientes  compras     gasto  compras_por_cliente  gasto_por_cliente
+segmento_cliente                                                                     
+Regular                 36       39  11110000                 1.08           308611.0
+VIP                     24       29   8066000                 1.21           336083.0
+```
+
+**Respuesta:** Sí. Cada cliente VIP gasta en promedio $336.083 contra $308.611 de un cliente Regular, y hace 1,21 compras contra 1,08.
+**Criterio:** promedio por cliente (total dividido entre el número de clientes distintos de cada segmento). No se usan los totales porque hay 36 clientes Regular y solo 24 VIP, y por eso los Regulares suman más aunque cada uno compre menos.
+
+#### 4. ¿Qué método de pago es el más usado?
+
+```
+metodo_pago
+Efectivo         30
+Tarjeta          25
+Transferencia    13
+Name: count, dtype: int64
+```
+
+**Respuesta:** Efectivo es el método de pago más usado, con 30 ventas.
+**Criterio:** número de ventas por método de pago (`value_counts()`).
+
+#### 5. ¿Cuáles son los cinco clientes con más compras?
+
+```
+                             compras  gasto_total
+id_cliente nombre_cliente                        
+21         Nicolas Cardona         2      2515000
+35         Matias Rodriguez        2      1278000
+52         Mia Quintero            2      1090000
+58         Luna Montoya            2      1007000
+3          Luis Perez              2       730000
+```
+
+**Respuesta:** Nicolás Cardona, Matías Rodríguez, Mía Quintero, Luna Montoya y Luis Pérez.
+**Criterio:** número de compras de mayor a menor. Como todos tienen 2 compras, el desempate es el gasto total.
+
+### Bonus: ventas por mes
+
+```
+mes
+2026-04    18234000
+2026-05      942000
+Freq: M, Name: total, dtype: int64
+```
+
+**Respuesta:** abril de 2026 fue el mes que más vendió, con $18.234.000.
+
+### Explicaciones de los entregables
+
+- **¿Por qué `.iloc[2, 6]` devuelve el total de V003?** Después de `set_index("id_venta")`, `id_venta` deja de ser columna. Contando desde 0, las columnas quedan así: id_cliente (0), fecha_venta (1), producto (2), categoria (3), cantidad (4), precio_unitario (5) y total (6). La fila en la posición 2 es V003, así que `.iloc[2, 6]` es su total.
+- **Limpieza:** los datos venían casi limpios. Solo había un nulo, en el `producto` de la venta V004, y ninguna fila duplicada en las dos tablas. Además, `fecha_venta` venía como texto. Se quitaron los espacios sobrantes de los textos, la ciudad se puso en formato título, el producto vacío se rellenó con "Sin especificar", la fecha se convirtió a datetime con formato `%Y-%m-%d` y se eliminaron duplicados por si los hubiera.
+- **¿Por qué `fillna` y no `dropna`?** La venta V004 no tiene nombre de producto, pero sí tiene un total real de $780.000. Con `dropna` se habría perdido ese dinero y los ingresos quedarían mal calculados.
+- **Columnas del merge:** ventas tiene 10 columnas y clientes 5. La columna en común (`id_cliente`) aparece una sola vez en el resultado, así que quedan 10 + 5 − 1 = 14. Las filas siguen siendo 68 porque `how="left"` conserva todas las ventas y `validate="m:1"` garantiza que cada venta se une con un solo cliente.

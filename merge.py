@@ -13,6 +13,29 @@ def validar_premerge(clientes, ventas):
     - Cuántas ventas no tienen cliente asociado (esto solo se informa, no falla).
     """
     # TODO 6: escribir las validaciones y devolver True o False.
+    print("\n===== Validación antes del merge =====")
+
+    if "id_cliente" not in clientes.columns or "id_cliente" not in ventas.columns:
+        print("ERROR: falta la columna id_cliente en alguna de las tablas.")
+        return False
+    print("OK: la columna id_cliente existe en clientes y en ventas.")
+
+    repetidos = clientes["id_cliente"].duplicated().sum()
+    if repetidos > 0:
+        print(f"ERROR: hay {repetidos} id_cliente repetidos en clientes.")
+        return False
+    print("OK: no hay id_cliente repetidos en clientes.")
+
+    tipo_clientes = clientes["id_cliente"].dtype
+    tipo_ventas = ventas["id_cliente"].dtype
+    if tipo_clientes != tipo_ventas:
+        print(f"ERROR: tipos distintos (clientes: {tipo_clientes}, ventas: {tipo_ventas}).")
+        return False
+    print(f"OK: id_cliente tiene el mismo tipo en ambas tablas ({tipo_clientes}).")
+
+    sin_cliente = (~ventas["id_cliente"].isin(clientes["id_cliente"])).sum()
+    print(f"Ventas sin cliente asociado: {sin_cliente}")
+
     return True
 
 
@@ -26,4 +49,19 @@ def unir(clientes, ventas):
     - Guardar con df.to_csv(...) en PROCESSED / "merge.csv".
     """
     # TODO 7: validar con validar_premerge(), hacer el merge, guardar el CSV y devolver el dataframe.
-    return None
+    if not validar_premerge(clientes, ventas):
+        print("No se hizo el merge porque la validación falló.")
+        return None
+
+    df = ventas.merge(clientes, on="id_cliente", how="left", validate="m:1")
+
+    PROCESSED.mkdir(parents=True, exist_ok=True)
+    df.to_csv(PROCESSED / "merge.csv", index=False)
+
+    print("\n===== Resultado del merge =====")
+    print(f"Ventas: {ventas.shape} | Clientes: {clientes.shape} | Merge: {df.shape}")
+    print(f"Columnas esperadas: {ventas.shape[1]} + {clientes.shape[1]} - 1 = "
+          f"{ventas.shape[1] + clientes.shape[1] - 1}")
+    print(f"Archivo guardado en: {PROCESSED / 'merge.csv'}")
+    print(df.head())
+    return df
