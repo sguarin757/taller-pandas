@@ -187,3 +187,22 @@ Freq: M, Name: total, dtype: int64
 - **Limpieza:** los datos venían casi limpios. Solo había un nulo, en el `producto` de la venta V004, y ninguna fila duplicada en las dos tablas. Además, `fecha_venta` venía como texto. Se quitaron los espacios sobrantes de los textos, la ciudad se puso en formato título, el producto vacío se rellenó con "Sin especificar", la fecha se convirtió a datetime con formato `%Y-%m-%d` y se eliminaron duplicados por si los hubiera.
 - **¿Por qué `fillna` y no `dropna`?** La venta V004 no tiene nombre de producto, pero sí tiene un total real de $780.000. Con `dropna` se habría perdido ese dinero y los ingresos quedarían mal calculados.
 - **Columnas del merge:** ventas tiene 10 columnas y clientes 5. La columna en común (`id_cliente`) aparece una sola vez en el resultado, así que quedan 10 + 5 − 1 = 14. Las filas siguen siendo 68 porque `how="left"` conserva todas las ventas y `validate="m:1"` garantiza que cada venta se une con un solo cliente.
+
+### Evidencias (carpeta `images/`)
+
+Cada pantallazo muestra la terminal con el ambiente `(venv)` activo, el comando ejecutado y su resultado. Cuando la salida no cabe en una pantalla, se divide en varias partes.
+
+- [entregable0_venv_activo_instalacion_librerias](images/entregable0_venv_activo_instalacion_librerias.png)
+- [entregable1_salida_exploracion_py](images/entregable1_salida_exploracion_py.png)
+- [entregable1_shape_info_describe_ventas_clientes_parte1](images/entregable1_shape_info_describe_ventas_clientes_parte1.png)
+- [entregable1_shape_info_describe_ventas_clientes_parte2](images/entregable1_shape_info_describe_ventas_clientes_parte2.png)
+- [entregable2_opcion2_limpieza_antes_despues_parte1](images/entregable2_opcion2_limpieza_antes_despues_parte1.png)
+- [entregable2_opcion2_limpieza_antes_despues_parte2](images/entregable2_opcion2_limpieza_antes_despues_parte2.png)
+- [entregable3_opcion3_validacion_merge_parte1](images/entregable3_opcion3_validacion_merge_parte1.png)
+- [entregable3_opcion3_validacion_merge_parte2](images/entregable3_opcion3_validacion_merge_parte2.png)
+- [entregable3_opcion4_analisis_completo_parte1](images/entregable3_opcion4_analisis_completo_parte1.png)
+- [entregable3_opcion4_analisis_completo_parte2](images/entregable3_opcion4_analisis_completo_parte2.png)
+- [entregable3_opcion4_analisis_completo_parte3](images/entregable3_opcion4_analisis_completo_parte3.png)
+- [entregable3_opcion4_analisis_completo_parte4](images/entregable3_opcion4_analisis_completo_parte4.png)
+- [ventas_por_canal](images/ventas_por_canal.png)
+- [ventas_por_categoria](images/ventas_por_categoria.png)
